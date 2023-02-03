@@ -31,7 +31,7 @@ def loadDataset(filename,split,trainingSet=[],testSet=[]):
                     trainingSet.append(dataset[x])
                 else:
                     testSet.append(dataset[x])
-loadDataset('iris.data.txt', 0.66,trainingSet=[],testSet=[])
+#loadDataset('iris.data.txt', 0.66,trainingSet=[],testSet=[])
 #print('train:'+repr(len(trainingSet)) 
 #print('test:'+ repr(len(testSet)))
 #print('training:',trainingSet.head()) ça n'affiche pas 
@@ -40,8 +40,8 @@ def euclideanDistance(instance_2,instance_1,length):
     for x in range (length):
         dist += pow((instance_2[x] -instance_1[x]), 2)
     return math.sqrt(dist)
-distance= euclideanDistance([2,2,2,'a'], [4,4,4,'b'], 3)
-print('distance',repr(distance))
+#distance= euclideanDistance([2,2,2,'a'], [4,4,4,'b'], 3)
+#print('distance',repr(distance))
 # neighbours 
 def getNeighbors(trainingSet,testInstance,k):
     distances=[]
@@ -55,11 +55,11 @@ def getNeighbors(trainingSet,testInstance,k):
         neighbors.append(distances[x][0])
         return neighbors
         
-trainingSet=[[2,2,2,'a'],[4,4,4,'b']]
-testInstance=[5,5,5]
-k=1
-neighbors=getNeighbors(trainingSet, testInstance, k)
-print('neighbors are : ',neighbors)
+#trainingSet=[[2,2,2,'a'],[4,4,4,'b']]
+#testInstance=[5,5,5]
+#k=1
+#neighbors=getNeighbors(trainingSet, testInstance, k)
+#print('neighbors are : ',neighbors)
 
 # choose the classes 
 def getResponse(neighbors):
@@ -69,18 +69,59 @@ def getResponse(neighbors):
         if response in classVotes:
             classVotes[response]+= 1
         else:
-            classVotes=1
+            classVotes[response]=1
     sortedVotes=sorted(classVotes.iteritems(),key=operator.itemgetter(1),reverse=True)
-    return sortedVotes
-neighbors = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
+    return sortedVotes[0][0]
 
-response = getResponse(neighbors)
+#neighbors = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
 
-print(response)
+#response = getResponse(neighbors)
+
+#print(response)
 # it doesn't work the example
 
 # c'est pas encore fini (to be continued )
 
+def getAccuracy(testSet,predictions):
+    correct=0
+    for x in range(len(testSet)):
+        if testSet[x][-1]== predictions[x]:
+            correct +=1
+    return(correct/float(len(testSet)))*100#message d'erreur sur la division par 0 
+#testSet = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
+
+#predictions = ['a', 'a', 'a']
+
+#accuracy = getAccuracy(testSet, predictions)
+
+#print(accuracy)
+def main():
+    trainingSet=[]
+    testSet=[]
+    split=0.8
+    loadDataset('iris.data.txt', split)
+    print('trainset:'+repr(len(trainingSet)))
+    print('testset:'+repr(len(testSet)))#c 'est quoi repr
+    predictions=[]
+    k= 3 
+    for x in range(len(testSet)):
+        neighbors=getNeighbors(trainingSet, testSet[x], k)
+        result=getResponse(neighbors)
+        predictions.append(result)
+    accuracy=getAccuracy(testSet, predictions)
+    print('Accuracy:',accuracy)
+    
+main()
+
+        
+
+
+    
+    
+    
+  
+    
+    
 
     
 
