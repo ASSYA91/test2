@@ -31,10 +31,16 @@ def loadDataset(filename,split,trainingSet=[],testSet=[]):
                     trainingSet.append(dataset[x])
                 else:
                     testSet.append(dataset[x])
-#loadDataset('iris.data.txt', 0.66,trainingSet=[],testSet=[])
-#print('train:'+repr(len(trainingSet)) 
-#print('test:'+ repr(len(testSet)))
-#print('training:',trainingSet.head()) ça n'affiche pas 
+    return trainingSet,testSet
+       
+
+trainingSet,testSet=loadDataset('iris.data.txt', 0.66,trainingSet=[],testSet=[])
+
+print('train:'+repr(len(trainingSet)))
+print('test:'+ repr(len(testSet)))
+# il faut toujours retourner mon vvariable souhaité dans la fonction puis le faire appeler dans une variable 
+
+
 def euclideanDistance(instance_2,instance_1,length):
     dist=0
     for x in range (length):
@@ -42,15 +48,19 @@ def euclideanDistance(instance_2,instance_1,length):
     return math.sqrt(dist)
 #distance= euclideanDistance([2,2,2,'a'], [4,4,4,'b'], 3)
 #print('distance',repr(distance))
-# neighbours 
+
+
+
+#neighbours 
+
 def getNeighbors(trainingSet,testInstance,k):
     distances=[]
     length=len(testInstance)-1
     for x in range (len(trainingSet)):
-        dist= euclideanDistance(testInstance, trainingSet, length)
-        distances.append(trainingSet[x],dist)
+        dist= euclideanDistance(testInstance, trainingSet[x], length)
+        distances.append((trainingSet[x],dist))
         distances.sort(key=operator.itemgetter(1))
-        neighbors=0
+        neighbors=[]
     for x in range (k):
         neighbors.append(distances[x][0])
         return neighbors
@@ -61,6 +71,7 @@ def getNeighbors(trainingSet,testInstance,k):
 #neighbors=getNeighbors(trainingSet, testInstance, k)
 #print('neighbors are : ',neighbors)
 
+
 # choose the classes 
 def getResponse(neighbors):
     classVotes={}
@@ -69,37 +80,39 @@ def getResponse(neighbors):
         if response in classVotes:
             classVotes[response]+= 1
         else:
-            classVotes[response]=1
-    sortedVotes=sorted(classVotes.iteritems(),key=operator.itemgetter(1),reverse=True)
+          classVotes[response]=1
+    sortedVotes = sorted(classVotes.items(), key=operator.itemgetter(1), reverse=True)
     return sortedVotes[0][0]
+
+
 
 #neighbors = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
 
 #response = getResponse(neighbors)
 
 #print(response)
-# it doesn't work the example
+#it doesn't work the example
 
-# c'est pas encore fini (to be continued )
+
 
 def getAccuracy(testSet,predictions):
     correct=0
     for x in range(len(testSet)):
         if testSet[x][-1]== predictions[x]:
             correct +=1
-    return(correct/float(len(testSet)))*100#message d'erreur sur la division par 0 
-#testSet = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
+    return(correct/float(len(testSet)))*100
+testSet = [[1,1,1,'a'], [2,2,2,'a'], [3,3,3,'b']]
 
-#predictions = ['a', 'a', 'a']
+predictions = ['a', 'a', 'a']
 
-#accuracy = getAccuracy(testSet, predictions)
+accuracy = getAccuracy(testSet, predictions)
 
-#print(accuracy)
+print(accuracy)
+
 def main():
-    trainingSet=[]
-    testSet=[]
-    split=0.8
-    loadDataset('iris.data.txt', split)
+    
+    trainingSet,testSet=loadDataset('iris.data.txt', 0.8,trainingSet=[],testSet=[])
+
     print('trainset:'+repr(len(trainingSet)))
     print('testset:'+repr(len(testSet)))#c 'est quoi repr
     predictions=[]
@@ -112,6 +125,7 @@ def main():
     print('Accuracy:',accuracy)
     
 main()
+
 
         
 
